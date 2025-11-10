@@ -1163,7 +1163,7 @@ async function sendMessage(BotToken, ChatID, 日志内容, config_JSON) {
     try {
         const 请求时间 = new Date(日志内容.TIME).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
         const 请求URL = new URL(日志内容.URL);
-        const msg = `<b>#${config_JSON.优选订阅生成.SUBNAME} 日志通知</b>\n\n` +
+        const msg = `<b>#${config_JSON.优选订阅生成.SUBNAME} Log notification</b>\n\n` +
             `📌 <b>type：</b>#${日志内容.TYPE}\n` +
             `🌐 <b>IP：</b><code>${日志内容.IP}</code>\n` +
             `📍 <b>Location：</b>${日志内容.CC}\n` +
@@ -1172,7 +1172,7 @@ async function sendMessage(BotToken, ChatID, 日志内容, config_JSON) {
             `🔍 <b>path：</b><code>${请求URL.pathname + 请求URL.search}</code>\n` +
             `🤖 <b>UA：</b><code>${日志内容.UA}</code>\n` +
             `📅 <b>time：</b>${请求时间}\n` +
-            `${config_JSON.CF.Usage.success ? `📊 <b>请求用量：</b>${config_JSON.CF.Usage.total}/100000 <b>${((config_JSON.CF.Usage.total / 100000) * 100).toFixed(2)}%</b>\n` : ''}`;
+            `${config_JSON.CF.Usage.success ? `📊 <b>Requested usage：</b>${config_JSON.CF.Usage.total}/100000 <b>${((config_JSON.CF.Usage.total / 100000) * 100).toFixed(2)}%</b>\n` : ''}`;
 
         const url = `https://api.telegram.org/bot${BotToken}/sendMessage?chat_id=${ChatID}&parse_mode=HTML&text=${encodeURIComponent(msg)}`;
         return fetch(url, {
@@ -1217,14 +1217,14 @@ async function 读取config_JSON(env, host, userID, 重置配置 = false) {
         TIME: new Date().toISOString(),
         HOST: host,
         UUID: userID,
-        协议类型: "v" + "le" + "ss",
-        传输协议: "ws",
-        跳过证书验证: true,
-        优选订阅生成: {
+        Protocoltype: "v" + "le" + "ss",
+        TransmissionProtocol: "ws",
+        Skipcertificateverification: true,
+        Preferredsubscriptiongeneration: {
             local: true, // true: 基于本地的优选地址  false: 优选订阅生成器
-            本地IP库: {
-                随机IP: true, // 当 随机IP 为true时生效，启用随机IP的数量，否则使用KV内的ADD.txt
-                随机数量: 16, // 当local为true时生效，随机IP的数量
+            LocalIPdatabase: {
+                RandomIP: true, // 当 随机IP 为true时生效，启用随机IP的数量，否则使用KV内的ADD.txt
+                RandomNumber: 16, // 当local为true时生效，随机IP的数量
             },
             SUB: null,
             SUBNAME: "club" + "gratis",
@@ -1279,7 +1279,7 @@ async function 读取config_JSON(env, host, userID, 重置配置 = false) {
 
     config_JSON.HOST = host;
     config_JSON.UUID = userID;
-    config_JSON.PATH = config_JSON.反代.SOCKS5.启用 ? ('/' + config_JSON.反代.SOCKS5.启用 + (config_JSON.反代.SOCKS5.全局 ? '://' : '=') + config_JSON.反代.SOCKS5.账号) : (config_JSON.反代.PROXYIP === 'auto' ? '/' : `/proxyip=${config_JSON.反代.PROXYIP}`);
+    config_JSON.PATH = config_JSON.反代.SOCKS5.启用 ? ('/clubgratis' + config_JSON.反代.SOCKS5.启用 + (config_JSON.反代.SOCKS5.全局 ? '://' : '=') + config_JSON.反代.SOCKS5.账号) : (config_JSON.反代.PROXYIP === 'auto' ? '/clubgratis' : `/proxyip=${config_JSON.反代.PROXYIP}`);
     config_JSON.LINK = `${config_JSON.协议类型}://${userID}@${host}:443?security=tls&type=${config_JSON.传输协议}&host=${host}&sni=${host}&path=${encodeURIComponent(config_JSON.PATH)}&fragment=${encodeURIComponent('1,40-60,30-50,tlshello')}&encryption=none${config_JSON.跳过证书验证 ? '&allowInsecure=1' : ''}#${encodeURIComponent(config_JSON.优选订阅生成.SUBNAME)}`;
     config_JSON.优选订阅生成.TOKEN = await MD5MD5(host + userID);
 
